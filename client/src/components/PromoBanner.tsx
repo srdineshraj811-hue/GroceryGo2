@@ -85,24 +85,26 @@ export function PromoBanner({ banners, onBannerClick }: PromoBannerProps) {
 
       {banners.length > 1 && (
         <>
-          <Button
-            size="icon"
-            variant="ghost"
-            className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur-sm hover:bg-white"
-            onClick={scrollPrev}
-            data-testid="button-banner-prev"
-          >
-            <ChevronLeft className="h-5 w-5" />
-          </Button>
-          <Button
-            size="icon"
-            variant="ghost"
-            className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur-sm hover:bg-white"
-            onClick={scrollNext}
-            data-testid="button-banner-next"
-          >
-            <ChevronRight className="h-5 w-5" />
-          </Button>
+          <div className="absolute bottom-4 right-4 flex gap-2 md:flex hidden">
+            <Button
+              size="icon"
+              variant="outline"
+              className="bg-white/80 backdrop-blur-sm hover:bg-white"
+              onClick={scrollPrev}
+              data-testid="button-banner-prev"
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </Button>
+            <Button
+              size="icon"
+              variant="outline"
+              className="bg-white/80 backdrop-blur-sm hover:bg-white"
+              onClick={scrollNext}
+              data-testid="button-banner-next"
+            >
+              <ChevronRight className="h-5 w-5" />
+            </Button>
+          </div>
 
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
             {banners.map((_, index) => (

@@ -1,11 +1,12 @@
-import { Search, MapPin } from "lucide-react";
+import { Search, MapPin, ChevronLeft, ChevronRight } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { PromoBanner } from "@/components/PromoBanner";
 import { CategoryCard } from "@/components/CategoryCard";
 import { ProductCard } from "@/components/ProductCard";
-import { ProductCarousel } from "@/components/ProductCarousel";
+import { ProductCarousel, type ProductCarouselHandle } from "@/components/ProductCarousel";
 import CategoryDetail from "./CategoryDetail";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import type { SpecialBanner } from "@shared/schema";
 
 //todo: remove mock functionality
@@ -87,6 +88,8 @@ const mockSubcategories = [
 export default function CustomerHome() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
+  const previouslyOrderedRef = useRef<ProductCarouselHandle>(null);
+  const popularProductsRef = useRef<ProductCarouselHandle>(null);
 
   const handleCategoryClick = (categoryId: string) => {
     setSelectedCategoryId(categoryId);
@@ -145,8 +148,28 @@ export default function CustomerHome() {
         </section>
 
         <section>
-          <h2 className="font-semibold text-lg mb-4" data-testid="text-previously-ordered-title">Previously Ordered</h2>
-          <ProductCarousel>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-semibold text-lg" data-testid="text-previously-ordered-title">Previously Ordered</h2>
+            <div className="flex gap-2">
+              <Button
+                size="icon"
+                variant="outline"
+                onClick={() => previouslyOrderedRef.current?.scrollLeft()}
+                data-testid="button-previously-ordered-prev"
+              >
+                <ChevronLeft />
+              </Button>
+              <Button
+                size="icon"
+                variant="outline"
+                onClick={() => previouslyOrderedRef.current?.scrollRight()}
+                data-testid="button-previously-ordered-next"
+              >
+                <ChevronRight />
+              </Button>
+            </div>
+          </div>
+          <ProductCarousel ref={previouslyOrderedRef}>
             {previouslyOrderedItems.map((product) => (
               <div key={product.id} className="w-44 flex-shrink-0 snap-start">
                 <ProductCard {...product} />
@@ -156,8 +179,28 @@ export default function CustomerHome() {
         </section>
 
         <section>
-          <h2 className="font-semibold text-lg mb-4" data-testid="text-popular-products-title">Popular Products</h2>
-          <ProductCarousel>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-semibold text-lg" data-testid="text-popular-products-title">Popular Products</h2>
+            <div className="flex gap-2">
+              <Button
+                size="icon"
+                variant="outline"
+                onClick={() => popularProductsRef.current?.scrollLeft()}
+                data-testid="button-popular-products-prev"
+              >
+                <ChevronLeft />
+              </Button>
+              <Button
+                size="icon"
+                variant="outline"
+                onClick={() => popularProductsRef.current?.scrollRight()}
+                data-testid="button-popular-products-next"
+              >
+                <ChevronRight />
+              </Button>
+            </div>
+          </div>
+          <ProductCarousel ref={popularProductsRef}>
             {products.map((product) => (
               <div key={product.id} className="w-44 flex-shrink-0 snap-start">
                 <ProductCard {...product} />
