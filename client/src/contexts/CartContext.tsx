@@ -28,6 +28,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setItems(prevItems => {
       const existingItem = prevItems.find(item => item.id === id);
       
+      if (quantity <= 0) {
+        return prevItems.filter(item => item.id !== id);
+      }
+      
       if (existingItem) {
         return prevItems.map(item =>
           item.id === id ? { ...item, quantity } : item
