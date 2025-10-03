@@ -14,7 +14,11 @@ const initialCartItems = [
 
 const TAX_RATE = 0.08;
 
-export default function CustomerCart() {
+interface CustomerCartProps {
+  onProceedToCheckout?: () => void;
+}
+
+export default function CustomerCart({ onProceedToCheckout }: CustomerCartProps) {
   const [cartItems, setCartItems] = useState(initialCartItems);
 
   const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -79,6 +83,7 @@ export default function CustomerCart() {
             <Button 
               className="w-full" 
               size="lg"
+              onClick={onProceedToCheckout}
               data-testid="button-proceed-to-pay"
             >
               Proceed to Pay

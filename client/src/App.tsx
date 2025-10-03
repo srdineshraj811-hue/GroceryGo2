@@ -10,6 +10,7 @@ import CustomerOrders from "@/pages/CustomerOrders";
 import CustomerSpecials from "@/pages/CustomerSpecials";
 import CustomerNotifications from "@/pages/CustomerNotifications";
 import CustomerCart from "@/pages/CustomerCart";
+import CustomerCheckout from "@/pages/CustomerCheckout";
 import DriverDashboard from "@/pages/DriverDashboard";
 import AdminDashboard from "@/pages/AdminDashboard";
 
@@ -35,7 +36,9 @@ function App() {
       case "notifications":
         return <CustomerNotifications />;
       case "cart":
-        return <CustomerCart />;
+        return <CustomerCart onProceedToCheckout={() => setActiveTab("checkout")} />;
+      case "checkout":
+        return <CustomerCheckout onBack={() => setActiveTab("cart")} />;
       default:
         return <CustomerHome />;
     }
