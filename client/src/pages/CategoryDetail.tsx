@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Card } from "@/components/ui/card";
+import { ProductCard } from "@/components/ProductCard";
 
 interface Product {
   id: string;
@@ -23,7 +23,6 @@ interface CategoryDetailProps {
   categoryName: string;
   subcategories: Subcategory[];
   onBack: () => void;
-  onAddToCart: (productId: string) => void;
 }
 
 export default function CategoryDetail({
@@ -31,7 +30,6 @@ export default function CategoryDetail({
   categoryName,
   subcategories,
   onBack,
-  onAddToCart,
 }: CategoryDetailProps) {
   const [activeSubcategoryId, setActiveSubcategoryId] = useState<string>(
     subcategories[0]?.id || ""
@@ -113,39 +111,15 @@ export default function CategoryDetail({
             <h2 className="text-lg font-semibold mb-3">{subcategory.name}</h2>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
               {subcategory.products.map((product) => (
-                <Card
+                <ProductCard
                   key={product.id}
-                  className="overflow-hidden"
-                  data-testid={`card-product-${product.id}`}
-                >
-                  <div className="aspect-square bg-muted">
-                    <img
-                      src={product.imageUrl}
-                      alt={product.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="p-3">
-                    <h3 className="font-medium text-sm line-clamp-2 mb-1">
-                      {product.name}
-                    </h3>
-                    <p className="text-xs text-muted-foreground mb-2">
-                      {product.unit}
-                    </p>
-                    <div className="flex items-center justify-between">
-                      <span className="font-semibold text-primary">
-                        ${product.price.toFixed(2)}
-                      </span>
-                      <Button
-                        size="sm"
-                        onClick={() => onAddToCart(product.id)}
-                        data-testid={`button-add-to-cart-${product.id}`}
-                      >
-                        Add
-                      </Button>
-                    </div>
-                  </div>
-                </Card>
+                  id={product.id}
+                  name={product.name}
+                  price={product.price}
+                  image={product.imageUrl}
+                  unit={product.unit}
+                  stock={50}
+                />
               ))}
             </div>
           </div>

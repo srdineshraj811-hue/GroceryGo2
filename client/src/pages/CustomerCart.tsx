@@ -3,14 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { ShoppingCart } from "lucide-react";
-import { useState } from "react";
-
-//todo: remove mock functionality
-const initialCartItems = [
-  { id: "1", name: "Organic Bananas", price: 2.99, quantity: 2, image: "https://images.unsplash.com/photo-1603833665858-e61d17a86224?w=400&h=400&fit=crop", unit: "lb" },
-  { id: "2", name: "Fresh Strawberries", price: 4.99, quantity: 1, image: "https://images.unsplash.com/photo-1464965911861-746a04b4bca6?w=400&h=400&fit=crop", unit: "lb" },
-  { id: "3", name: "Roma Tomatoes", price: 3.49, quantity: 1, image: "https://images.unsplash.com/photo-1546094096-0df4bcaaa337?w=400&h=400&fit=crop", unit: "lb" },
-];
+import { useCart } from "@/contexts/CartContext";
 
 const TAX_RATE = 0.08;
 
@@ -19,26 +12,28 @@ interface CustomerCartProps {
 }
 
 export default function CustomerCart({ onProceedToCheckout }: CustomerCartProps) {
-  const [cartItems, setCartItems] = useState(initialCartItems);
+  const { items: cartItems, updateQuantity, removeFromCart } = useCart();
 
   const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const tax = subtotal * TAX_RATE;
   const total = subtotal + tax;
 
   const handleIncrease = (id: string) => {
-    setCartItems(items => items.map(item => 
-      item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-    ));
+    const item = cartItems.find(item => item.id === id);
+    if (item) {
+      updateQuantity(id, item.quantity + 1);
+    }
   };
 
   const handleDecrease = (id: string) => {
-    setCartItems(items => items.map(item => 
-      item.id === id && item.quantity > 1 ? { ...item, quantity: item.quantity - 1 } : item
-    ));
+    const item = cartItems.find(item => item.id === id);
+    if (item && item.quantity > 1) {
+      updateQuantity(id, item.quantity - 1);
+    }
   };
 
   const handleRemove = (id: string) => {
-    setCartItems(items => items.filter(item => item.id !== id));
+    removeFromCart(id);
   };
 
   return (

@@ -104,7 +104,6 @@ export default function CustomerHome() {
         categoryName={selectedCategory.name}
         subcategories={mockSubcategories}
         onBack={() => setSelectedCategoryId(null)}
-        onAddToCart={(productId) => console.log("Add to cart:", productId)}
       />
     );
   }
