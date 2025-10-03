@@ -7,18 +7,19 @@ interface OrderCardProps {
   id: string;
   orderNumber: string;
   date: string;
-  status: "pending" | "preparing" | "out_for_delivery" | "delivered";
+  status: "Placed" | "Processing" | "Shipped" | "Complete";
   itemCount: number;
   total: number;
-  deliveryTime?: string;
-  proofImage?: string;
+  onViewDetails?: () => void;
+  onReorder?: () => void;
+  onRateOrder?: () => void;
 }
 
 const statusConfig = {
-  pending: { label: "Pending", color: "bg-chart-5 text-white" },
-  preparing: { label: "Preparing", color: "bg-chart-3 text-white" },
-  out_for_delivery: { label: "Out for Delivery", color: "bg-primary text-primary-foreground" },
-  delivered: { label: "Delivered", color: "bg-chart-1 text-white" },
+  Placed: { label: "Placed", color: "bg-chart-5 text-white" },
+  Processing: { label: "Processing", color: "bg-chart-3 text-white" },
+  Shipped: { label: "Shipped", color: "bg-primary text-primary-foreground" },
+  Complete: { label: "Complete", color: "bg-chart-1 text-white" },
 };
 
 export function OrderCard({
@@ -28,13 +29,14 @@ export function OrderCard({
   status,
   itemCount,
   total,
-  deliveryTime,
-  proofImage,
+  onViewDetails,
+  onReorder,
+  onRateOrder,
 }: OrderCardProps) {
   const config = statusConfig[status];
 
   return (
-    <Card className="p-4" data-testid={`card-order-${id}`}>
+    <Card className="p-4 hover-elevate cursor-pointer" data-testid={`card-order-${id}`} onClick={onViewDetails}>
       <div className="flex items-start justify-between mb-3">
         <div>
           <p className="font-semibold" data-testid={`text-order-number-${id}`}>
@@ -49,34 +51,29 @@ export function OrderCard({
         </Badge>
       </div>
 
-      <div className="space-y-2 mb-4">
-        <div className="flex items-center gap-2 text-sm">
-          <Package className="h-4 w-4 text-muted-foreground" />
-          <span data-testid={`text-item-count-${id}`}>{itemCount} items</span>
-        </div>
-        {deliveryTime && (
-          <div className="flex items-center gap-2 text-sm">
-            <Clock className="h-4 w-4 text-muted-foreground" />
-            <span data-testid={`text-delivery-time-${id}`}>{deliveryTime}</span>
-          </div>
-        )}
-      </div>
-
       <div className="flex items-center justify-between pt-3 border-t">
         <div>
-          <p className="text-sm text-muted-foreground">Total</p>
+          <p className="text-sm text-muted-foreground">{itemCount} items</p>
           <p className="text-lg font-bold" data-testid={`text-total-${id}`}>
             ${total.toFixed(2)}
           </p>
         </div>
-        <div className="flex gap-2">
-          {proofImage && (
-            <Button variant="outline" size="sm" data-testid={`button-view-proof-${id}`}>
-              View Proof
-            </Button>
-          )}
-          <Button variant="outline" size="sm" data-testid={`button-view-details-${id}`}>
-            Details
+        <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={onReorder}
+            data-testid={`button-reorder-${id}`}
+          >
+            Reorder
+          </Button>
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={onRateOrder}
+            data-testid={`button-rate-order-${id}`}
+          >
+            Rate Order
           </Button>
         </div>
       </div>

@@ -11,6 +11,7 @@ import CustomerSpecials from "@/pages/CustomerSpecials";
 import CustomerNotifications from "@/pages/CustomerNotifications";
 import CustomerCart from "@/pages/CustomerCart";
 import CustomerCheckout from "@/pages/CustomerCheckout";
+import CustomerWishlist from "@/pages/CustomerWishlist";
 import DriverDashboard from "@/pages/DriverDashboard";
 import AdminDashboard from "@/pages/AdminDashboard";
 

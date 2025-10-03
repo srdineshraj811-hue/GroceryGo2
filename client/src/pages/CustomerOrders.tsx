@@ -1,41 +1,66 @@
 import { OrderCard } from "@/components/OrderCard";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import CustomerOrderDetail from "./CustomerOrderDetail";
+import { useState } from "react";
 
 //todo: remove mock functionality
 const orders = [
   {
     id: "1",
     orderNumber: "12345",
-    date: "Mar 15, 2024",
-    status: "out_for_delivery" as const,
+    date: "Mar 15, 2024 2:30 PM",
+    status: "Shipped" as const,
     itemCount: 8,
     total: 45.99,
-    deliveryTime: "2:00 PM - 3:00 PM",
-    proofImage: "/proof.jpg"
   },
   {
     id: "2",
     orderNumber: "12344",
-    date: "Mar 12, 2024",
-    status: "delivered" as const,
+    date: "Mar 12, 2024 1:15 PM",
+    status: "Complete" as const,
     itemCount: 12,
     total: 67.50,
-    proofImage: "/proof.jpg"
   },
   {
     id: "3",
     orderNumber: "12343",
-    date: "Mar 10, 2024",
-    status: "delivered" as const,
+    date: "Mar 10, 2024 11:45 AM",
+    status: "Complete" as const,
     itemCount: 6,
     total: 32.99,
-    proofImage: "/proof.jpg"
+  },
+  {
+    id: "4",
+    orderNumber: "12342",
+    date: "Mar 8, 2024 3:20 PM",
+    status: "Processing" as const,
+    itemCount: 5,
+    total: 28.75,
   },
 ];
 
 export default function CustomerOrders() {
-  const currentOrders = orders.filter(o => o.status !== "delivered");
-  const pastOrders = orders.filter(o => o.status === "delivered");
+  const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
+
+  const currentOrders = orders.filter(o => o.status !== "Complete");
+  const pastOrders = orders.filter(o => o.status === "Complete");
+
+  const handleReorder = (orderId: string) => {
+    console.log("Reorder:", orderId);
+  };
+
+  const handleRateOrder = (orderId: string) => {
+    console.log("Rate order:", orderId);
+  };
+
+  if (selectedOrderId) {
+    return (
+      <CustomerOrderDetail
+        orderId={selectedOrderId}
+        onBack={() => setSelectedOrderId(null)}
+      />
+    );
+  }
 
   return (
     <div className="pb-20">
@@ -55,7 +80,15 @@ export default function CustomerOrders() {
 
         <TabsContent value="current" className="mt-4 space-y-4">
           {currentOrders.length > 0 ? (
-            currentOrders.map((order) => <OrderCard key={order.id} {...order} />)
+            currentOrders.map((order) => (
+              <OrderCard
+                key={order.id}
+                {...order}
+                onViewDetails={() => setSelectedOrderId(order.id)}
+                onReorder={() => handleReorder(order.id)}
+                onRateOrder={() => handleRateOrder(order.id)}
+              />
+            ))
           ) : (
             <div className="text-center py-12">
               <p className="text-muted-foreground">No current orders</p>
@@ -65,7 +98,13 @@ export default function CustomerOrders() {
 
         <TabsContent value="past" className="mt-4 space-y-4">
           {pastOrders.map((order) => (
-            <OrderCard key={order.id} {...order} />
+            <OrderCard
+              key={order.id}
+              {...order}
+              onViewDetails={() => setSelectedOrderId(order.id)}
+              onReorder={() => handleReorder(order.id)}
+              onRateOrder={() => handleRateOrder(order.id)}
+            />
           ))}
         </TabsContent>
       </Tabs>

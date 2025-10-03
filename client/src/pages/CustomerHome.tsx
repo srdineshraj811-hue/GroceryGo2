@@ -1,4 +1,4 @@
-import { Search } from "lucide-react";
+import { Search, MapPin } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { PromoBanner } from "@/components/PromoBanner";
 import { CategoryCard } from "@/components/CategoryCard";
@@ -29,12 +29,18 @@ const mockBanners: SpecialBanner[] = [
 
 //todo: remove mock functionality
 const categories = [
-  { id: "1", name: "Fresh Vegetables", image: "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=600&h=400&fit=crop", itemCount: 48 },
-  { id: "2", name: "Fresh Fruits", image: "https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=600&h=400&fit=crop", itemCount: 35 },
-  { id: "3", name: "Dairy & Eggs", image: "https://images.unsplash.com/photo-1628088062854-d1870b4553da?w=600&h=400&fit=crop", itemCount: 24 },
-  { id: "4", name: "Meat & Seafood", image: "https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?w=600&h=400&fit=crop", itemCount: 42 },
-  { id: "5", name: "Bakery", image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=600&h=400&fit=crop", itemCount: 28 },
-  { id: "6", name: "Beverages", image: "https://images.unsplash.com/photo-1437418747212-8d9709afab22?w=600&h=400&fit=crop", itemCount: 56 },
+  { id: "1", name: "Batters, Dairy & Poultry", image: "https://images.unsplash.com/photo-1628088062854-d1870b4553da?w=600&h=400&fit=crop", itemCount: 48 },
+  { id: "2", name: "Beverages", image: "https://images.unsplash.com/photo-1437418747212-8d9709afab22?w=600&h=400&fit=crop", itemCount: 35 },
+  { id: "3", name: "Breakfast Cereals", image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&h=400&fit=crop", itemCount: 24 },
+  { id: "4", name: "Food Grains, Oils & Masala", image: "https://images.unsplash.com/photo-1596797882870-8c33deeac224?w=600&h=400&fit=crop", itemCount: 42 },
+  { id: "5", name: "Fresh Made Food", image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&h=400&fit=crop", itemCount: 28 },
+  { id: "6", name: "Frozen", image: "https://images.unsplash.com/photo-1628773822990-202f6816fed8?w=600&h=400&fit=crop", itemCount: 56 },
+  { id: "7", name: "Fruits & Vegetables", image: "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=600&h=400&fit=crop", itemCount: 64 },
+  { id: "8", name: "Meat", image: "https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?w=600&h=400&fit=crop", itemCount: 38 },
+  { id: "9", name: "Personal & Home Care", image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=600&h=400&fit=crop", itemCount: 72 },
+  { id: "10", name: "Pooja & Festival Items", image: "https://images.unsplash.com/photo-1603046891726-36bfd957e4f0?w=600&h=400&fit=crop", itemCount: 45 },
+  { id: "11", name: "Snacks", image: "https://images.unsplash.com/photo-1599490659213-e2b9527bd087?w=600&h=400&fit=crop", itemCount: 58 },
+  { id: "12", name: "Sports & Miscellaneous", image: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=600&h=400&fit=crop", itemCount: 32 },
 ];
 
 //todo: remove mock functionality
@@ -91,6 +97,10 @@ export default function CustomerHome() {
     <div className="pb-20">
       <div className="sticky top-0 bg-background z-10 border-b">
         <div className="p-4">
+          <div className="flex items-center gap-2 mb-2 text-sm text-muted-foreground">
+            <MapPin className="h-4 w-4" />
+            <span data-testid="text-service-location">Dallas, TX - Delivery Available</span>
+          </div>
           <h1 className="font-display font-bold text-2xl mb-4">FreshCart</h1>
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
