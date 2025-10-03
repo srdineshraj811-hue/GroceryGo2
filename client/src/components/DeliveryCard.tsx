@@ -1,7 +1,15 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Phone, Package, Clock, Camera } from "lucide-react";
+import { MapPin, Phone, Package, Clock, Camera, ChevronDown, ChevronUp } from "lucide-react";
+import { useState } from "react";
+
+interface OrderItem {
+  id: string;
+  name: string;
+  quantity: number;
+  price: number;
+}
 
 interface DeliveryCardProps {
   id: string;
@@ -10,6 +18,7 @@ interface DeliveryCardProps {
   customerPhone: string;
   address: string;
   itemCount: number;
+  items?: OrderItem[];
   scheduledTime: string;
   status: "pending" | "in_progress" | "delivered";
   onStatusChange: (status: string) => void;
@@ -23,11 +32,14 @@ export function DeliveryCard({
   customerPhone,
   address,
   itemCount,
+  items = [],
   scheduledTime,
   status,
   onStatusChange,
   onTakePhoto,
 }: DeliveryCardProps) {
+  const [showItems, setShowItems] = useState(false);
+
   return (
     <Card className="p-4" data-testid={`card-delivery-${id}`}>
       <div className="flex items-start justify-between mb-3">
@@ -67,13 +79,36 @@ export function DeliveryCard({
           <span data-testid={`text-customer-phone-${id}`}>{customerPhone}</span>
         </div>
         <div className="flex items-center gap-2 text-sm">
-          <Package className="h-4 w-4 text-muted-foreground" />
-          <span>{itemCount} items</span>
-        </div>
-        <div className="flex items-center gap-2 text-sm">
           <Clock className="h-4 w-4 text-muted-foreground" />
           <span data-testid={`text-scheduled-time-${id}`}>{scheduledTime}</span>
         </div>
+        
+        <button
+          onClick={() => setShowItems(!showItems)}
+          className="flex items-center gap-2 text-sm w-full py-2 hover-elevate active-elevate-2 rounded-md"
+          data-testid={`button-toggle-items-${id}`}
+        >
+          <Package className="h-4 w-4 text-muted-foreground" />
+          <span className="flex-1 text-left">{itemCount} items</span>
+          {showItems ? (
+            <ChevronUp className="h-4 w-4 text-muted-foreground" />
+          ) : (
+            <ChevronDown className="h-4 w-4 text-muted-foreground" />
+          )}
+        </button>
+
+        {showItems && items.length > 0 && (
+          <div className="ml-6 space-y-1 pt-2 border-t" data-testid={`order-items-${id}`}>
+            {items.map((item) => (
+              <div key={item.id} className="flex justify-between text-sm">
+                <span className="text-muted-foreground">
+                  {item.quantity}x {item.name}
+                </span>
+                <span className="font-medium">${item.price.toFixed(2)}</span>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="flex gap-2">
