@@ -16,6 +16,20 @@ export function CategoryCard({ id, name, image, itemCount, onClick }: CategoryCa
       onClick={onClick}
       data-testid={`card-category-${id}`}
     >
+      <div className="aspect-square bg-muted">
+        <img
+          src={image}
+          alt={name}
+          className="w-full h-full object-cover"
+        />
+      </div>
+      <div className="p-2">
+        <h3 className="font-semibold text-xs leading-tight line-clamp-2 text-center" data-testid={`text-category-name-${id}`}>
+          {name}
+        </h3>
+      </div>
+      
+      {/* Previous overlay format:
       <div className="relative aspect-video bg-muted">
         <img
           src={image}
@@ -32,6 +46,7 @@ export function CategoryCard({ id, name, image, itemCount, onClick }: CategoryCa
           </div>
         </div>
       </div>
+      */}
     </Card>
   );
 }
