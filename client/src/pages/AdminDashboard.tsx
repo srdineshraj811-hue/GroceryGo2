@@ -76,44 +76,139 @@ export default function AdminDashboard() {
 
           <main className="flex-1 overflow-auto p-6">
             <div className="max-w-7xl mx-auto space-y-6">
-              <div>
-                <h1 className="font-display font-bold text-3xl mb-2">Dashboard</h1>
-                <p className="text-muted-foreground">Overview of your grocery delivery platform</p>
-              </div>
+              {activeMenu === "dashboard" && (
+                <>
+                  <div>
+                    <h1 className="font-display font-bold text-3xl mb-2">Dashboard</h1>
+                    <p className="text-muted-foreground">Overview of your grocery delivery platform</p>
+                  </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                {stats.map((stat, index) => (
-                  <StatsCard key={index} {...stat} />
-                ))}
-              </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    {stats.map((stat, index) => (
+                      <StatsCard key={index} {...stat} />
+                    ))}
+                  </div>
 
-              <Card className="p-6">
-                <h2 className="font-semibold text-lg mb-4">Recent Orders</h2>
-                <div className="space-y-3">
-                  {recentOrders.map((order) => (
-                    <div key={order.id} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg hover-elevate">
-                      <div className="flex items-center gap-4">
+                  <Card className="p-6">
+                    <h2 className="font-semibold text-lg mb-4">Recent Orders</h2>
+                    <div className="space-y-3">
+                      {recentOrders.map((order) => (
+                        <div key={order.id} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg hover-elevate">
+                          <div className="flex items-center gap-4">
+                            <div>
+                              <p className="font-medium">Order #{order.id}</p>
+                              <p className="text-sm text-muted-foreground">{order.customer}</p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-4">
+                            <div className="text-right">
+                              <p className="font-semibold">${order.total.toFixed(2)}</p>
+                              <p className="text-sm text-muted-foreground">{order.items} items</p>
+                            </div>
+                            <Badge>
+                              {order.status.replace("_", " ")}
+                            </Badge>
+                            <Button variant="outline" size="sm">
+                              View
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </Card>
+                </>
+              )}
+
+              {activeMenu === "products" && (
+                <>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h1 className="font-display font-bold text-3xl mb-2">Product Management</h1>
+                      <p className="text-muted-foreground">Manage categories, subcategories, and products</p>
+                    </div>
+                    <Button data-testid="button-add-category">Add Category</Button>
+                  </div>
+
+                  <Card className="p-6">
+                    <h2 className="font-semibold text-lg mb-4">Categories</h2>
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
                         <div>
-                          <p className="font-medium">Order #{order.id}</p>
-                          <p className="text-sm text-muted-foreground">{order.customer}</p>
+                          <p className="font-medium">Fresh Vegetables</p>
+                          <p className="text-sm text-muted-foreground">3 subcategories • 24 products</p>
                         </div>
-                      </div>
-                      <div className="flex items-center gap-4">
-                        <div className="text-right">
-                          <p className="font-semibold">${order.total.toFixed(2)}</p>
-                          <p className="text-sm text-muted-foreground">{order.items} items</p>
+                        <div className="flex gap-2">
+                          <Button variant="outline" size="sm">Edit</Button>
+                          <Button variant="outline" size="sm">Manage</Button>
                         </div>
-                        <Badge>
-                          {order.status.replace("_", " ")}
-                        </Badge>
-                        <Button variant="outline" size="sm">
-                          View
-                        </Button>
                       </div>
                     </div>
-                  ))}
+                  </Card>
+                </>
+              )}
+
+              {activeMenu === "content" && (
+                <>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h1 className="font-display font-bold text-3xl mb-2">Specials & Banners</h1>
+                      <p className="text-muted-foreground">Manage promotional banners and special offers</p>
+                    </div>
+                    <Button data-testid="button-add-banner">Add Banner</Button>
+                  </div>
+
+                  <Card className="p-6">
+                    <h2 className="font-semibold text-lg mb-4">Active Banners</h2>
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-4 p-3 bg-muted/50 rounded-lg">
+                        <div className="w-32 h-20 bg-muted rounded overflow-hidden">
+                          <img 
+                            src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=200&h=100&fit=crop" 
+                            alt="Banner" 
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <div className="flex-1">
+                          <p className="font-medium">50% OFF Fresh Produce</p>
+                          <p className="text-sm text-muted-foreground">Links to: /specials/produce</p>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button variant="outline" size="sm">Edit</Button>
+                          <Button variant="outline" size="sm">Delete</Button>
+                        </div>
+                      </div>
+                    </div>
+                  </Card>
+                </>
+              )}
+
+              {activeMenu === "orders" && (
+                <div>
+                  <h1 className="font-display font-bold text-3xl mb-2">Orders</h1>
+                  <p className="text-muted-foreground">Manage customer orders</p>
                 </div>
-              </Card>
+              )}
+
+              {activeMenu === "drivers" && (
+                <div>
+                  <h1 className="font-display font-bold text-3xl mb-2">Driver Management</h1>
+                  <p className="text-muted-foreground">Manage delivery drivers</p>
+                </div>
+              )}
+
+              {activeMenu === "zones" && (
+                <div>
+                  <h1 className="font-display font-bold text-3xl mb-2">Delivery Zones</h1>
+                  <p className="text-muted-foreground">Configure delivery zones and ZIP codes</p>
+                </div>
+              )}
+
+              {activeMenu === "settings" && (
+                <div>
+                  <h1 className="font-display font-bold text-3xl mb-2">Settings</h1>
+                  <p className="text-muted-foreground">Configure platform settings</p>
+                </div>
+              )}
             </div>
           </main>
         </div>

@@ -1,41 +1,123 @@
-import { Card } from "@/components/ui/card";
+import useEmblaCarousel from "embla-carousel-react";
+import { useCallback, useEffect, useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { useLocation } from "wouter";
+import type { SpecialBanner } from "@shared/schema";
 
 interface PromoBannerProps {
-  title: string;
-  description: string;
-  image: string;
-  ctaText: string;
+  banners: SpecialBanner[];
+  onBannerClick?: (banner: SpecialBanner) => void;
 }
 
-export function PromoBanner({ title, description, image, ctaText }: PromoBannerProps) {
+export function PromoBanner({ banners, onBannerClick }: PromoBannerProps) {
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: "start" });
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [, setLocation] = useLocation();
+
+  const scrollPrev = useCallback(() => {
+    if (emblaApi) emblaApi.scrollPrev();
+  }, [emblaApi]);
+
+  const scrollNext = useCallback(() => {
+    if (emblaApi) emblaApi.scrollNext();
+  }, [emblaApi]);
+
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return;
+    setSelectedIndex(emblaApi.selectedScrollSnap());
+  }, [emblaApi]);
+
+  const handleBannerClick = useCallback((banner: SpecialBanner) => {
+    if (onBannerClick) {
+      onBannerClick(banner);
+    } else {
+      setLocation(banner.linkUrl);
+    }
+  }, [onBannerClick, setLocation]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    onSelect();
+    emblaApi.on("select", onSelect);
+    emblaApi.on("reInit", onSelect);
+
+    return () => {
+      emblaApi.off("select", onSelect);
+      emblaApi.off("reInit", onSelect);
+    };
+  }, [emblaApi, onSelect]);
+
+  if (banners.length === 0) {
+    return null;
+  }
+
   return (
-    <Card className="overflow-hidden hover-elevate active-elevate-2 cursor-pointer" data-testid="card-promo-banner">
-      <div className="relative h-40 md:h-48 bg-gradient-to-r from-primary to-chart-1">
-        <img
-          src={image}
-          alt={title}
-          className="w-full h-full object-cover mix-blend-overlay opacity-30"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent" />
-        <div className="absolute inset-0 p-6 flex flex-col justify-center">
-          <h2 className="font-display font-bold text-2xl md:text-3xl text-white mb-2" data-testid="text-banner-title">
-            {title}
-          </h2>
-          <p className="text-white/90 text-sm md:text-base mb-4 max-w-md" data-testid="text-banner-description">
-            {description}
-          </p>
-          <Button
-            variant="outline"
-            className="w-fit bg-white/10 backdrop-blur-sm border-white/30 text-white hover:bg-white/20"
-            data-testid="button-banner-cta"
-          >
-            {ctaText}
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
+    <div className="relative" data-testid="carousel-promo-banner">
+      <div className="overflow-hidden rounded-lg" ref={emblaRef}>
+        <div className="flex">
+          {banners.map((banner) => (
+            <div
+              key={banner.id}
+              className="flex-[0_0_100%] min-w-0"
+              data-testid={`slide-banner-${banner.id}`}
+            >
+              <div
+                className="relative h-40 md:h-48 overflow-hidden rounded-lg cursor-pointer hover-elevate active-elevate-2"
+                onClick={() => handleBannerClick(banner)}
+              >
+                <img
+                  src={banner.imageUrl}
+                  alt={banner.title}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent" />
+                <div className="absolute inset-0 p-6 flex flex-col justify-center">
+                  <h2 className="font-display font-bold text-2xl md:text-3xl text-white mb-2">
+                    {banner.title}
+                  </h2>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
-    </Card>
+
+      {banners.length > 1 && (
+        <>
+          <Button
+            size="icon"
+            variant="ghost"
+            className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur-sm hover:bg-white"
+            onClick={scrollPrev}
+            data-testid="button-banner-prev"
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </Button>
+          <Button
+            size="icon"
+            variant="ghost"
+            className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur-sm hover:bg-white"
+            onClick={scrollNext}
+            data-testid="button-banner-next"
+          >
+            <ChevronRight className="h-5 w-5" />
+          </Button>
+
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+            {banners.map((_, index) => (
+              <button
+                key={index}
+                className={`w-2 h-2 rounded-full transition-all ${
+                  index === selectedIndex ? "bg-white w-6" : "bg-white/50"
+                }`}
+                onClick={() => emblaApi?.scrollTo(index)}
+                data-testid={`button-banner-dot-${index}`}
+              />
+            ))}
+          </div>
+        </>
+      )}
+    </div>
   );
 }

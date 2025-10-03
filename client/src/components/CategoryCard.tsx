@@ -6,11 +6,16 @@ interface CategoryCardProps {
   name: string;
   image: string;
   itemCount: number;
+  onClick?: () => void;
 }
 
-export function CategoryCard({ id, name, image, itemCount }: CategoryCardProps) {
+export function CategoryCard({ id, name, image, itemCount, onClick }: CategoryCardProps) {
   return (
-    <Card className="overflow-hidden hover-elevate active-elevate-2 cursor-pointer" data-testid={`card-category-${id}`}>
+    <Card 
+      className="overflow-hidden hover-elevate active-elevate-2 cursor-pointer" 
+      onClick={onClick}
+      data-testid={`card-category-${id}`}
+    >
       <div className="relative aspect-video bg-muted">
         <img
           src={image}
