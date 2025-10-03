@@ -9,9 +9,10 @@ const TAX_RATE = 0.08;
 
 interface CustomerCartProps {
   onProceedToCheckout?: () => void;
+  onNavigateHome?: () => void;
 }
 
-export default function CustomerCart({ onProceedToCheckout }: CustomerCartProps) {
+export default function CustomerCart({ onProceedToCheckout, onNavigateHome }: CustomerCartProps) {
   const { items: cartItems, updateQuantity, removeFromCart } = useCart();
 
   const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -89,7 +90,7 @@ export default function CustomerCart({ onProceedToCheckout }: CustomerCartProps)
         <div className="flex flex-col items-center justify-center py-20 px-4">
           <ShoppingCart className="h-16 w-16 text-muted-foreground mb-4" />
           <p className="text-muted-foreground mb-4" data-testid="text-empty-cart">Your cart is empty</p>
-          <Button data-testid="button-start-shopping">Start Shopping</Button>
+          <Button onClick={onNavigateHome} data-testid="button-start-shopping">Start Shopping</Button>
         </div>
       )}
     </div>

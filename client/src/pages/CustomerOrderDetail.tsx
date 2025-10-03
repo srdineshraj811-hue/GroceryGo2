@@ -3,7 +3,9 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { ArrowLeft, Check } from "lucide-react";
+import { RateOrderDialog } from "@/components/RateOrderDialog";
 import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 interface OrderDetailProps {
   orderId: string;
@@ -12,7 +14,7 @@ interface OrderDetailProps {
 
 const mockOrderData = {
   id: "12345",
-  status: "Shipped",
+  status: "Out for Delivery",
   createdAt: "2024-10-01T14:30:00",
   deliveryMode: "2 hour delivery",
   deliveryAddress: "123 Main St, Apt 4B, Dallas, TX 75201",
@@ -27,16 +29,27 @@ const mockOrderData = {
 };
 
 const statusSteps = [
-  { label: "Order Placed", key: "Placed" },
-  { label: "Processing", key: "Processing" },
-  { label: "Shipped", key: "Shipped" },
+  { label: "Order Placed", key: "Order Placed" },
+  { label: "Purchasing", key: "Purchasing" },
+  { label: "Out for Delivery", key: "Out for Delivery" },
   { label: "Complete", key: "Complete" },
 ];
 
 export default function CustomerOrderDetail({ orderId, onBack }: OrderDetailProps) {
   const [order] = useState(mockOrderData);
+  const [showRatingDialog, setShowRatingDialog] = useState(false);
+  const { toast } = useToast();
   
   const currentStepIndex = statusSteps.findIndex(step => step.key === order.status);
+
+  const handleSubmitRating = (rating: number, review: string) => {
+    console.log("Rating submitted:", { orderId: order.id, rating, review });
+    toast({
+      title: "Rating Submitted",
+      description: "Thank you for your feedback!",
+    });
+    setShowRatingDialog(false);
+  };
 
   const getStepStatus = (index: number) => {
     if (index < currentStepIndex) return "completed";
@@ -189,11 +202,24 @@ export default function CustomerOrderDetail({ orderId, onBack }: OrderDetailProp
           <Button variant="outline" className="flex-1" data-testid="button-reorder">
             Reorder
           </Button>
-          <Button variant="outline" className="flex-1" data-testid="button-rate-order">
+          <Button 
+            variant="outline" 
+            className="flex-1" 
+            onClick={() => setShowRatingDialog(true)}
+            disabled={order.status !== "Complete"}
+            data-testid="button-rate-order"
+          >
             Rate Order
           </Button>
         </div>
       </div>
+
+      <RateOrderDialog
+        open={showRatingDialog}
+        onOpenChange={setShowRatingDialog}
+        orderNumber={order.id}
+        onSubmit={handleSubmitRating}
+      />
     </div>
   );
 }

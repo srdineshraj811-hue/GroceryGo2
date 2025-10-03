@@ -13,17 +13,25 @@ import CustomerNotifications from "@/pages/CustomerNotifications";
 import CustomerCart from "@/pages/CustomerCart";
 import CustomerCheckout from "@/pages/CustomerCheckout";
 import CustomerWishlist from "@/pages/CustomerWishlist";
-import DriverDashboard from "@/pages/DriverDashboard";
+import ShopperDashboard from "@/pages/ShopperDashboard";
 import AdminDashboard from "@/pages/AdminDashboard";
 
 function CustomerView() {
   const [activeTab, setActiveTab] = useState<string>("home");
+  const [homeResetKey, setHomeResetKey] = useState(0);
   const { uniqueItemCount } = useCart();
+
+  const handleTabChange = (newTab: string) => {
+    if (newTab === "home") {
+      setHomeResetKey(prev => prev + 1);
+    }
+    setActiveTab(newTab);
+  };
 
   const renderView = () => {
     switch (activeTab) {
       case "home":
-        return <CustomerHome />;
+        return <CustomerHome key={homeResetKey} />;
       case "orders":
         return <CustomerOrders />;
       case "specials":
@@ -31,11 +39,11 @@ function CustomerView() {
       case "notifications":
         return <CustomerNotifications />;
       case "cart":
-        return <CustomerCart onProceedToCheckout={() => setActiveTab("checkout")} />;
+        return <CustomerCart onProceedToCheckout={() => setActiveTab("checkout")} onNavigateHome={() => handleTabChange("home")} />;
       case "checkout":
         return <CustomerCheckout onBack={() => setActiveTab("cart")} />;
       default:
-        return <CustomerHome />;
+        return <CustomerHome key={homeResetKey} />;
     }
   };
 
@@ -44,7 +52,7 @@ function CustomerView() {
       {renderView()}
       <CustomerBottomNav
         activeTab={activeTab}
-        onTabChange={setActiveTab}
+        onTabChange={handleTabChange}
         cartCount={uniqueItemCount}
         notificationCount={2}
       />
@@ -71,7 +79,7 @@ function App() {
             
             {role === "customer" && <CustomerView />}
 
-            {role === "driver" && <DriverDashboard />}
+            {role === "shopper" && <ShopperDashboard />}
 
             {role === "admin" && <AdminDashboard />}
           </div>

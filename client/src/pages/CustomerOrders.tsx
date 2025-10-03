@@ -1,7 +1,9 @@
 import { OrderCard } from "@/components/OrderCard";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import CustomerOrderDetail from "./CustomerOrderDetail";
+import { RateOrderDialog } from "@/components/RateOrderDialog";
 import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 //todo: remove mock functionality
 const orders = [
@@ -9,7 +11,7 @@ const orders = [
     id: "1",
     orderNumber: "12345",
     date: "Mar 15, 2024 2:30 PM",
-    status: "Shipped" as const,
+    status: "Out for Delivery" as const,
     itemCount: 8,
     total: 45.99,
   },
@@ -33,7 +35,7 @@ const orders = [
     id: "4",
     orderNumber: "12342",
     date: "Mar 8, 2024 3:20 PM",
-    status: "Processing" as const,
+    status: "Purchasing" as const,
     itemCount: 5,
     total: 28.75,
   },
@@ -41,6 +43,8 @@ const orders = [
 
 export default function CustomerOrders() {
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
+  const [ratingOrderId, setRatingOrderId] = useState<string | null>(null);
+  const { toast } = useToast();
 
   const currentOrders = orders.filter(o => o.status !== "Complete");
   const pastOrders = orders.filter(o => o.status === "Complete");
@@ -50,8 +54,22 @@ export default function CustomerOrders() {
   };
 
   const handleRateOrder = (orderId: string) => {
-    console.log("Rate order:", orderId);
+    const order = orders.find(o => o.id === orderId);
+    if (order && order.status === "Complete") {
+      setRatingOrderId(orderId);
+    }
   };
+
+  const handleSubmitRating = (rating: number, review: string) => {
+    console.log("Rating submitted:", { orderId: ratingOrderId, rating, review });
+    toast({
+      title: "Rating Submitted",
+      description: "Thank you for your feedback!",
+    });
+    setRatingOrderId(null);
+  };
+
+  const ratingOrder = orders.find(o => o.id === ratingOrderId);
 
   if (selectedOrderId) {
     return (
@@ -63,10 +81,11 @@ export default function CustomerOrders() {
   }
 
   return (
-    <div className="pb-20">
-      <div className="sticky top-0 bg-background z-10 border-b p-4">
-        <h1 className="font-display font-bold text-2xl">My Orders</h1>
-      </div>
+    <>
+      <div className="pb-20">
+        <div className="sticky top-0 bg-background z-10 border-b p-4">
+          <h1 className="font-display font-bold text-2xl">My Orders</h1>
+        </div>
 
       <Tabs defaultValue="current" className="p-4">
         <TabsList className="w-full">
@@ -108,6 +127,14 @@ export default function CustomerOrders() {
           ))}
         </TabsContent>
       </Tabs>
-    </div>
+      </div>
+
+      <RateOrderDialog
+        open={ratingOrderId !== null}
+        onOpenChange={(open) => !open && setRatingOrderId(null)}
+        orderNumber={ratingOrder?.orderNumber || ""}
+        onSubmit={handleSubmitRating}
+      />
+    </>
   );
 }

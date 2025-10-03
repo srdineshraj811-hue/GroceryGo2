@@ -1,7 +1,28 @@
 import { ProductCard } from "@/components/ProductCard";
 import { Badge } from "@/components/ui/badge";
+import { PromoBanner } from "@/components/PromoBanner";
+import type { SpecialBanner } from "@shared/schema";
 
 //todo: remove mock functionality
+const specialBanners: SpecialBanner[] = [
+  {
+    id: "sp1",
+    title: "Weekend Sale - Up to 50% OFF!",
+    imageUrl: "https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&h=400&fit=crop",
+    linkUrl: "/specials",
+    sortOrder: 0,
+    isActive: true,
+  },
+  {
+    id: "sp2",
+    title: "Fresh Produce Special",
+    imageUrl: "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=800&h=400&fit=crop",
+    linkUrl: "/specials",
+    sortOrder: 1,
+    isActive: true,
+  },
+];
+
 const specialProducts = [
   { id: "1", name: "Organic Bananas", price: 1.99, originalPrice: 2.99, image: "https://images.unsplash.com/photo-1603833665858-e61d17a86224?w=400&h=400&fit=crop", unit: "lb", stock: 25, discount: "33% OFF" },
   { id: "2", name: "Fresh Strawberries", price: 3.49, originalPrice: 4.99, image: "https://images.unsplash.com/photo-1464965911861-746a04b4bca6?w=400&h=400&fit=crop", unit: "lb", stock: 8, discount: "30% OFF" },
@@ -17,11 +38,8 @@ export default function CustomerSpecials() {
         <p className="text-sm text-muted-foreground">Limited time deals on fresh products</p>
       </div>
 
-      <div className="p-4">
-        <div className="bg-chart-2/10 border border-chart-2/20 rounded-lg p-4 mb-6">
-          <h2 className="font-semibold text-chart-2 mb-1">Weekend Sale!</h2>
-          <p className="text-sm text-muted-foreground">Save up to 50% on selected items. Offer ends Sunday midnight.</p>
-        </div>
+      <div className="p-4 space-y-6">
+        <PromoBanner banners={specialBanners} />
 
         <div className="grid grid-cols-2 gap-4">
           {specialProducts.map((product) => (

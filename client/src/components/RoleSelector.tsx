@@ -14,7 +14,7 @@ export function RoleSelector({ role, onRoleChange }: RoleSelectorProps) {
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="customer">Customer View</SelectItem>
-          <SelectItem value="driver">Driver View</SelectItem>
+          <SelectItem value="shopper">Shopper View</SelectItem>
           <SelectItem value="admin">Admin View</SelectItem>
         </SelectContent>
       </Select>

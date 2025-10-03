@@ -7,7 +7,7 @@ interface OrderCardProps {
   id: string;
   orderNumber: string;
   date: string;
-  status: "Placed" | "Processing" | "Shipped" | "Complete";
+  status: "Order Placed" | "Purchasing" | "Out for Delivery" | "Complete";
   itemCount: number;
   total: number;
   onViewDetails?: () => void;
@@ -16,10 +16,10 @@ interface OrderCardProps {
 }
 
 const statusConfig = {
-  Placed: { label: "Placed", color: "bg-chart-5 text-white" },
-  Processing: { label: "Processing", color: "bg-chart-3 text-white" },
-  Shipped: { label: "Shipped", color: "bg-primary text-primary-foreground" },
-  Complete: { label: "Complete", color: "bg-chart-1 text-white" },
+  "Order Placed": { label: "Order Placed", color: "bg-chart-5 text-white" },
+  "Purchasing": { label: "Purchasing", color: "bg-chart-3 text-white" },
+  "Out for Delivery": { label: "Out for Delivery", color: "bg-primary text-primary-foreground" },
+  "Complete": { label: "Complete", color: "bg-chart-1 text-white" },
 };
 
 export function OrderCard({
@@ -74,6 +74,7 @@ export function OrderCard({
             variant="outline" 
             size="sm"
             onClick={onRateOrder}
+            disabled={status !== "Complete"}
             className="flex-1"
             data-testid={`button-rate-order-${id}`}
           >
