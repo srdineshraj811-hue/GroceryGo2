@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus, Minus } from "lucide-react";
-import { useState } from "react";
+import { Plus, Minus, Heart } from "lucide-react";
+import { useState, type MouseEvent } from "react";
 
 interface ProductCardProps {
   id: string;
@@ -10,23 +10,33 @@ interface ProductCardProps {
   image: string;
   unit: string;
   stock: number;
+  onAddToCart?: (id: string, quantity: number) => void;
+  onWishlistToggle?: (id: string) => void;
+  isInWishlist?: boolean;
 }
 
-export function ProductCard({ id, name, price, image, unit, stock }: ProductCardProps) {
+export function ProductCard({ id, name, price, image, unit, stock, onAddToCart, onWishlistToggle, isInWishlist = false }: ProductCardProps) {
   const [quantity, setQuantity] = useState(0);
 
   const handleAdd = () => {
     if (quantity < stock) {
-      setQuantity(quantity + 1);
-      console.log(`Added ${name} to cart`);
+      const newQuantity = quantity + 1;
+      setQuantity(newQuantity);
+      onAddToCart?.(id, newQuantity);
     }
   };
 
   const handleRemove = () => {
     if (quantity > 0) {
-      setQuantity(quantity - 1);
-      console.log(`Removed ${name} from cart`);
+      const newQuantity = quantity - 1;
+      setQuantity(newQuantity);
+      onAddToCart?.(id, newQuantity);
     }
+  };
+
+  const handleWishlistToggle = (e: MouseEvent) => {
+    e.stopPropagation();
+    onWishlistToggle?.(id);
   };
 
   return (
@@ -37,8 +47,19 @@ export function ProductCard({ id, name, price, image, unit, stock }: ProductCard
           alt={name}
           className="w-full h-full object-cover"
         />
+        <Button
+          size="icon"
+          variant="ghost"
+          className="absolute top-2 right-2 bg-background/80 backdrop-blur-sm hover:bg-background"
+          onClick={handleWishlistToggle}
+          data-testid={`button-wishlist-${id}`}
+        >
+          <Heart 
+            className={`h-4 w-4 ${isInWishlist ? 'fill-primary text-primary' : ''}`}
+          />
+        </Button>
         {stock < 10 && stock > 0 && (
-          <div className="absolute top-2 right-2 bg-chart-2 text-white text-xs px-2 py-1 rounded-md">
+          <div className="absolute top-2 left-2 bg-chart-2 text-white text-xs px-2 py-1 rounded-md">
             Low Stock
           </div>
         )}
@@ -67,7 +88,7 @@ export function ProductCard({ id, name, price, image, unit, stock }: ProductCard
             data-testid={`button-add-${id}`}
           >
             <Plus className="h-4 w-4 mr-1" />
-            Add
+            + ADD
           </Button>
         ) : (
           <div className="flex items-center justify-between gap-2">
