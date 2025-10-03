@@ -51,18 +51,21 @@ export function OrderCard({
         </Badge>
       </div>
 
-      <div className="flex items-center justify-between pt-3 border-t">
-        <div>
-          <p className="text-sm text-muted-foreground">{itemCount} items</p>
-          <p className="text-lg font-bold" data-testid={`text-total-${id}`}>
-            ${total.toFixed(2)}
-          </p>
+      <div className="pt-3 border-t space-y-3">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm text-muted-foreground">{itemCount} items</p>
+            <p className="text-lg font-bold" data-testid={`text-total-${id}`}>
+              ${total.toFixed(2)}
+            </p>
+          </div>
         </div>
         <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
           <Button 
             variant="outline" 
             size="sm" 
             onClick={onReorder}
+            className="flex-1"
             data-testid={`button-reorder-${id}`}
           >
             Reorder
@@ -71,6 +74,7 @@ export function OrderCard({
             variant="outline" 
             size="sm"
             onClick={onRateOrder}
+            className="flex-1"
             data-testid={`button-rate-order-${id}`}
           >
             Rate Order
