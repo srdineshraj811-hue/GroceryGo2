@@ -8,26 +8,28 @@ interface ProductCardProps {
   id: string;
   name: string;
   price: number;
-  image: string;
+  image?: string;
+  imageUrl?: string;
   unit: string;
   stock: number;
   onWishlistToggle?: (id: string) => void;
   isInWishlist?: boolean;
 }
 
-export function ProductCard({ id, name, price, image, unit, stock, onWishlistToggle, isInWishlist = false }: ProductCardProps) {
+export function ProductCard({ id, name, price, image, imageUrl, unit, stock, onWishlistToggle, isInWishlist = false }: ProductCardProps) {
+  const productImage = image || imageUrl || '';
   const { addToCart, getItemQuantity } = useCart();
   const quantity = getItemQuantity(id);
 
   const handleAdd = () => {
     if (quantity < stock) {
-      addToCart(id, name, price, image, unit, quantity + 1);
+      addToCart(id, name, price, productImage, unit, quantity + 1);
     }
   };
 
   const handleRemove = () => {
     if (quantity > 0) {
-      addToCart(id, name, price, image, unit, quantity - 1);
+      addToCart(id, name, price, productImage, unit, quantity - 1);
     }
   };
 
@@ -40,7 +42,7 @@ export function ProductCard({ id, name, price, image, unit, stock, onWishlistTog
     <Card className="overflow-hidden hover-elevate">
       <div className="relative aspect-square bg-muted">
         <img
-          src={image}
+          src={productImage}
           alt={name}
           className="w-full h-full object-cover"
         />
