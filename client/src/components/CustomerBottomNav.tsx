@@ -18,7 +18,7 @@ export function CustomerBottomNav({
     { id: "home", label: "Home", icon: Home },
     { id: "orders", label: "Orders", icon: Package },
     { id: "specials", label: "Specials", icon: Tag },
-    { id: "notifications", label: "Alerts", icon: Bell, badge: notificationCount },
+    { id: "notifications", label: "Notifications", icon: Bell, badge: notificationCount },
     { id: "cart", label: "Cart", icon: ShoppingCart, badge: cartCount },
   ];
 
