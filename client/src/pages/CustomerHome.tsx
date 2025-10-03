@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { PromoBanner } from "@/components/PromoBanner";
 import { CategoryCard } from "@/components/CategoryCard";
 import { ProductCard } from "@/components/ProductCard";
+import { ProductCarousel } from "@/components/ProductCarousel";
 import CategoryDetail from "./CategoryDetail";
 import { useState } from "react";
 import type { SpecialBanner } from "@shared/schema";
@@ -49,6 +50,18 @@ const products = [
   { id: "2", name: "Fresh Strawberries", price: 4.99, image: "https://images.unsplash.com/photo-1464965911861-746a04b4bca6?w=400&h=400&fit=crop", unit: "lb", stock: 8 },
   { id: "3", name: "Roma Tomatoes", price: 3.49, image: "https://images.unsplash.com/photo-1546094096-0df4bcaaa337?w=400&h=400&fit=crop", unit: "lb", stock: 18 },
   { id: "4", name: "Avocados", price: 1.99, image: "https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?w=400&h=400&fit=crop", unit: "each", stock: 30 },
+  { id: "5", name: "Fresh Broccoli", price: 2.49, image: "https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?w=400&h=400&fit=crop", unit: "lb", stock: 20 },
+  { id: "6", name: "Blueberries", price: 5.99, image: "https://images.unsplash.com/photo-1498557850523-fd3d118b962e?w=400&h=400&fit=crop", unit: "pint", stock: 15 },
+];
+
+//todo: remove mock functionality
+const previouslyOrderedItems = [
+  { id: "p1", name: "Whole Milk", price: 4.49, image: "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=400&h=400&fit=crop", unit: "gal", stock: 25 },
+  { id: "p2", name: "Organic Bananas", price: 2.99, image: "https://images.unsplash.com/photo-1603833665858-e61d17a86224?w=400&h=400&fit=crop", unit: "lb", stock: 25 },
+  { id: "p3", name: "Brown Eggs", price: 3.99, image: "https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?w=400&h=400&fit=crop", unit: "dozen", stock: 30 },
+  { id: "p4", name: "Fresh Bread", price: 2.99, image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400&h=400&fit=crop", unit: "loaf", stock: 18 },
+  { id: "p5", name: "Greek Yogurt", price: 4.99, image: "https://images.unsplash.com/photo-1488477181946-6428a0291777?w=400&h=400&fit=crop", unit: "32 oz", stock: 22 },
+  { id: "p6", name: "Orange Juice", price: 3.49, image: "https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=400&h=400&fit=crop", unit: "64 oz", stock: 28 },
 ];
 
 //todo: remove mock functionality
@@ -132,12 +145,25 @@ export default function CustomerHome() {
         </section>
 
         <section>
-          <h2 className="font-semibold text-lg mb-4">Popular Products</h2>
-          <div className="grid grid-cols-2 gap-4">
-            {products.map((product) => (
-              <ProductCard key={product.id} {...product} />
+          <h2 className="font-semibold text-lg mb-4" data-testid="text-previously-ordered-title">Previously Ordered</h2>
+          <ProductCarousel>
+            {previouslyOrderedItems.map((product) => (
+              <div key={product.id} className="w-44 flex-shrink-0 snap-start">
+                <ProductCard {...product} />
+              </div>
             ))}
-          </div>
+          </ProductCarousel>
+        </section>
+
+        <section>
+          <h2 className="font-semibold text-lg mb-4" data-testid="text-popular-products-title">Popular Products</h2>
+          <ProductCarousel>
+            {products.map((product) => (
+              <div key={product.id} className="w-44 flex-shrink-0 snap-start">
+                <ProductCard {...product} />
+              </div>
+            ))}
+          </ProductCarousel>
         </section>
       </div>
     </div>
