@@ -1,0 +1,180 @@
+got it — here’s a clean, **image-only technical prompt** you can paste into Replit. it **doesn’t** include build advice; it just describes what’s visible on each screen.
+
+---
+
+# build the exact UI from these screenshots
+
+## 1) Home (Customer)
+
+* Header: zipcode/service availability line (“Dallas” context), global Search input (placeholder for products).
+* Full-width promotional banner (carousel-style).
+* **Category grid** (2 cols mobile, 3–4 desktop). Tiles include (examples):
+
+  * Batters, Dairy & Poultry
+  * Beverages
+  * Breakfast Cereals
+  * Food Grains, Oils & Masala
+  * Fresh Made Food
+  * Frozen
+  * Fruits & Vegetables
+  * Meat
+  * Personal & Home Care
+  * Pooja & Festival Items
+  * Snacks
+  * Sports & Miscellaneous
+* “**Special Offers**” section below categories showing product cards in a grid.
+
+## 2) Category / Product Listing (Customer)
+
+* Title bar with the selected category (e.g., “Batters, Dairy & Poultry”).
+* Sub-tabs (examples shown: “Butter, Paneer & More”, “Eggs”).
+* **Product cards** (repeating grid):
+
+  * Square/rect image area.
+  * Product name (2-line truncate).
+  * Price.
+  * Primary action: “+ ADD”.
+  * Wishlist heart icon (toggle).
+* Example visible products across images:
+
+  * “Butter Indian [Salted] Amul – 200 gms”
+  * “Butter Indian [Unsalted] Amul – 500 gms”
+  * “Cheese Spread Spicy Garlic”
+  * “Desi Besan Laxmi 4 lbs”
+  * “Gulkand (Rose Jam)”
+
+## 3) Special Offers (Customer)
+
+* Page title: “Special Offers”.
+* Grid of discounted/featured items (same card layout as listing).
+* Example visible items: eco-festival items (e.g., **Eco-friendly Ganesh Idols**), **Sugarcane (single stick ~2 ft)**, select pantry items flagged as offer.
+
+## 4) Cart (Customer)
+
+* Title: “My Cart”.
+* **Empty-state** view: centered illustration/text (“Your cart is empty”).
+* **Filled-state** view:
+
+  * Line items (product name on left).
+  * Quantity stepper on right: **−** | qty | **+**.
+  * Per-line amount aligned right.
+  * Summary card on the side/bottom:
+
+    * Subtotal
+    * Tax (shows percent label)
+    * Divider
+    * **Total** (bold)
+    * CTA: **“Proceed to Pay”** (navigates to Checkout).
+
+## 5) Checkout (Customer)
+
+* Title: “Checkout”.
+* Form controls:
+
+  * **Delivery Mode** select with options: **Delivery**, **2 hour delivery**, **Pickup**.
+  * **Address** field (snapshot text input, example shows a full street/apartment).
+  * (Screen also shows tax calculation label consistent with cart.)
+  * Rewards balance area shown on some screenshots (balance text, optional toggle to apply).
+* Primary CTA button: **“Pay & Place Order”**.
+* After submit, navigates to Order Details.
+
+## 6) Orders List (Customer)
+
+* Title: “My Orders”.
+* Vertical list of order cards; each card shows:
+
+  * Order number/ID.
+  * Date/time stamp.
+  * **Status chip** (states seen: *Placed*, *Processing*, *Shipped*, *Complete*).
+  * Order total aligned to the right (bold).
+* Each card is tappable to open **Order Details**.
+* Some list items also show quick actions on the card: **Reorder**, **Rate Order**.
+
+## 7) Order Details (Customer)
+
+* Header: “Order #<id>” (or “Order <id>”).
+* Current **Status** text near header.
+* **Timeline/Stepper** visualization (horizontal or vertical) with the following stages in order:
+
+  1. Order Placed
+  2. Processing/Preparing
+  3. Shipped/Out for Delivery
+  4. Complete/Delivered
+* **Items list** inside a card:
+
+  * Row per item with “Name × Qty” on left, line total on right.
+  * Final **Total** row at bottom (bold).
+* **Address snapshot** block visible (street/apartment, city/state/zip).
+* May include delivery mode text and an invoice/summary style layout in one screenshot.
+
+## 8) Notifications (Customer)
+
+* Title: “Notifications”.
+* List of recent alerts (each row has an icon, short message, timestamp).
+* Samples visible: “Order Complete” messages showing # of products/items.
+* **Unread** items are visually distinct; the **Notifications** tab shows a **badge count** (red dot/number).
+
+## 9) Wishlist (Customer)
+
+* Title: “Wishlist”.
+* **Empty-state** screen in one screenshot (blank list message).
+* Filled state mirrors product card grid (image, name, price, **+ ADD** button).
+
+## 10) Profile (Customer)
+
+* Profile entry with logout/login option.
+* Menu/List items:
+
+  * My Orders
+  * Wishlist
+  * Check Delivery/Pickup Availability
+  * Address Details
+  * Refer & Earn
+  * MHG Rewards (rewards balance/history)
+  * FAQ & Support
+* Some profile header data shown: **User name**, **Rewards balance**, **Zip code**.
+
+## 11) Global Navigation (Customer)
+
+* **Bottom tab bar** with **5 tabs** (icons + labels):
+
+  * **Home**
+  * **Orders**
+  * **Specials**
+  * **Notifications** (with unread badge)
+  * **Cart** (with item count badge)
+* Tabs are sticky and persist across screens.
+
+## 12) Driver (high-level snapshot)
+
+* “Driver Dashboard” page present in role switch (from the top role selector).
+* Shows list/table of assigned deliveries and allows status progression (stages align with Order timeline).
+
+## 13) Admin (high-level snapshot)
+
+* “Admin Dashboard” page present in role switch.
+* Inventory/product management and basic order visibility (table/list layout).
+
+## 14) Text/Copy & Visual Nuances (as shown)
+
+* Product naming uses long titles with pack sizes (e.g., “Amul – 200 gms / 500 gms”).
+* Festival items (e.g., Ganesh idols) appear in offers.
+* Currency is **$** (US formatting).
+* Status words: **Placed**, **Processing**, **Shipped**, **Complete**.
+* Action labels exactly as visible: **“+ ADD”**, **“Proceed to Pay”**, **“Pay & Place Order”**, **“Reorder”**, **“Rate Order”**.
+* Cart empty state reads “Your cart is empty.”
+* Checkout has mode **“2 hour delivery”** spelled with the numeral “2”.
+
+## 15) Layout & Style (from images)
+
+* Mobile-first layout; cards have **rounded corners** and **soft shadows**.
+* Product grids: 2-column on small screens, expanding on larger.
+* Section headers: “Special Offers”, category names.
+* Buttons: solid fills for primary actions; outline/ghost for secondary (like quantity stepper).
+* Iconography consistent with shopping apps (heart for wishlist, bell for notifications, cart icon, home icon, tag/star for offers).
+* Color accents: **green** for primary actions/brand, **orange** highlights on specials and CTA emphasis.
+* Typography: clean sans-serif; titles bold; prices bold and colored.
+
+---
+
+**Replit task:** build the UI exactly as described above. replicate the copy, labels, tab names, button texts, statuses, and layouts as stated. do not change names or wording.
