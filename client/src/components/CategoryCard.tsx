@@ -1,0 +1,37 @@
+import { Card } from "@/components/ui/card";
+import { ChevronRight } from "lucide-react";
+
+interface CategoryCardProps {
+  id: string;
+  name: string;
+  image: string;
+  itemCount: number;
+}
+
+export function CategoryCard({ id, name, image, itemCount }: CategoryCardProps) {
+  return (
+    <Card className="overflow-hidden hover-elevate active-elevate-2 cursor-pointer" data-testid={`card-category-${id}`}>
+      <div className="relative aspect-video bg-muted">
+        <img
+          src={image}
+          alt={name}
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="font-semibold text-lg" data-testid={`text-category-name-${id}`}>
+                {name}
+              </h3>
+              <p className="text-sm text-white/90" data-testid={`text-item-count-${id}`}>
+                {itemCount} items
+              </p>
+            </div>
+            <ChevronRight className="h-5 w-5" />
+          </div>
+        </div>
+      </div>
+    </Card>
+  );
+}
