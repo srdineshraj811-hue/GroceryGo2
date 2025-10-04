@@ -7,6 +7,8 @@ export const users = pgTable("users", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   username: text("username").notNull().unique(),
   password: text("password").notNull(),
+  phoneNumber: text("phone_number"),
+  role: text("role").notNull().default("customer"),
 });
 
 export const insertUserSchema = createInsertSchema(users).pick({
@@ -114,9 +116,11 @@ export type WishlistItem = typeof wishlistItems.$inferSelect;
 export const orders = pgTable("orders", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
-  status: text("status").notNull().default("Placed"),
+  status: text("status").notNull().default("pending"),
   deliveryMode: text("delivery_mode").notNull().default("Delivery"),
   deliveryAddress: text("delivery_address").notNull(),
+  customerPhone: text("customer_phone"),
+  scheduledTime: text("scheduled_time"),
   subtotal: decimal("subtotal", { precision: 10, scale: 2 }).notNull(),
   tax: decimal("tax", { precision: 10, scale: 2 }).notNull(),
   total: decimal("total", { precision: 10, scale: 2 }).notNull(),
@@ -138,6 +142,11 @@ export const orderItems = pgTable("order_items", {
   productName: text("product_name").notNull(),
   quantity: integer("quantity").notNull(),
   price: decimal("price", { precision: 10, scale: 2 }).notNull(),
+  availabilityStatus: text("availability_status").notNull().default("available"),
+  replacementProductId: varchar("replacement_product_id").references(() => products.id),
+  replacementProductName: text("replacement_product_name"),
+  replacementPrice: decimal("replacement_price", { precision: 10, scale: 2 }),
+  isPurchased: boolean("is_purchased").notNull().default(false),
 });
 
 export const insertOrderItemSchema = createInsertSchema(orderItems).omit({
