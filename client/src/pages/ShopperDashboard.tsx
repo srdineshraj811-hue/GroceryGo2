@@ -6,8 +6,9 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Badge } from "@/components/ui/badge";
 import { useState, useMemo } from "react";
-import { Menu, ShoppingCart, Package, History, Clock } from "lucide-react";
+import { Menu, ShoppingCart, Package, History, Clock, Phone, AlertCircle, CheckCircle2 } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 type PurchaseFilterType = "order" | "items";
@@ -23,15 +24,15 @@ const initialDeliveries = [
     address: "123 Main St, Apt 4B, Dallas, TX 75201",
     itemCount: 8,
     items: [
-      { id: "1", name: "Organic Bananas", quantity: 2, price: 5.98 },
-      { id: "2", name: "Fresh Strawberries", quantity: 1, price: 4.99 },
-      { id: "3", name: "Roma Tomatoes", quantity: 3, price: 10.47 },
-      { id: "4", name: "Avocados", quantity: 4, price: 7.96 },
-      { id: "5", name: "Whole Milk", quantity: 1, price: 3.99 },
+      { id: "1", name: "Organic Bananas", quantity: 2, price: 5.98, availabilityStatus: "available" as "available" | "unavailable", isPurchased: false },
+      { id: "2", name: "Fresh Strawberries", quantity: 1, price: 4.99, availabilityStatus: "available" as "available" | "unavailable", isPurchased: false },
+      { id: "3", name: "Roma Tomatoes", quantity: 3, price: 10.47, availabilityStatus: "available" as "available" | "unavailable", isPurchased: false },
+      { id: "4", name: "Avocados", quantity: 4, price: 7.96, availabilityStatus: "available" as "available" | "unavailable", isPurchased: false },
+      { id: "5", name: "Whole Milk", quantity: 1, price: 3.99, availabilityStatus: "available" as "available" | "unavailable", isPurchased: false },
     ],
     scheduledTime: "2:00 PM - 3:00 PM",
     deliveryDate: "today",
-    status: "pending" as const,
+    status: "purchasing" as const,
   },
   {
     id: "2",
@@ -41,14 +42,14 @@ const initialDeliveries = [
     address: "456 Oak Ave, Dallas, TX 75202",
     itemCount: 5,
     items: [
-      { id: "1", name: "Greek Yogurt", quantity: 2, price: 7.98 },
-      { id: "2", name: "Fresh Salmon", quantity: 1, price: 12.99 },
-      { id: "3", name: "Mixed Greens", quantity: 1, price: 3.49 },
-      { id: "4", name: "Sourdough Bread", quantity: 1, price: 5.99 },
+      { id: "1", name: "Greek Yogurt", quantity: 2, price: 7.98, availabilityStatus: "available" as "available" | "unavailable", isPurchased: false },
+      { id: "2", name: "Fresh Salmon", quantity: 1, price: 12.99, availabilityStatus: "available" as "available" | "unavailable", isPurchased: false },
+      { id: "3", name: "Mixed Greens", quantity: 1, price: 3.49, availabilityStatus: "available" as "available" | "unavailable", isPurchased: false },
+      { id: "4", name: "Sourdough Bread", quantity: 1, price: 5.99, availabilityStatus: "available" as "available" | "unavailable", isPurchased: false },
     ],
     scheduledTime: "3:00 PM - 4:00 PM",
     deliveryDate: "today",
-    status: "pending" as const,
+    status: "purchasing" as const,
   },
   {
     id: "3",
@@ -58,13 +59,13 @@ const initialDeliveries = [
     address: "789 Maple Dr, Dallas, TX 75203",
     itemCount: 6,
     items: [
-      { id: "1", name: "Chicken Breast", quantity: 2, price: 17.98 },
-      { id: "2", name: "Organic Bananas", quantity: 1, price: 2.99 },
-      { id: "3", name: "Bell Peppers", quantity: 3, price: 5.37 },
+      { id: "1", name: "Chicken Breast", quantity: 2, price: 17.98, availabilityStatus: "available" as "available" | "unavailable", isPurchased: false },
+      { id: "2", name: "Organic Bananas", quantity: 1, price: 2.99, availabilityStatus: "available" as "available" | "unavailable", isPurchased: false },
+      { id: "3", name: "Bell Peppers", quantity: 3, price: 5.37, availabilityStatus: "available" as "available" | "unavailable", isPurchased: false },
     ],
     scheduledTime: "1:00 PM - 2:00 PM",
     deliveryDate: "tomorrow",
-    status: "pending" as const,
+    status: "purchasing" as const,
   },
 ];
 
@@ -142,6 +143,8 @@ export default function ShopperDashboard() {
         deliveryOrder: deliveryIndex + 1,
         orderNumber: delivery.orderNumber,
         customerName: delivery.customerName,
+        customerPhone: delivery.customerPhone,
+        orderStatus: delivery.status,
         itemKey: `${delivery.id}-${item.id}`,
       }))
     );
@@ -191,6 +194,24 @@ export default function ShopperDashboard() {
         [itemKey]: !prev[itemKey]
       }));
     }
+  };
+
+  const handleMarkUnavailable = (deliveryId: string, itemId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setDeliveries(prevDeliveries =>
+      prevDeliveries.map(delivery =>
+        delivery.id === deliveryId
+          ? {
+              ...delivery,
+              items: delivery.items.map(item =>
+                item.id === itemId
+                  ? { ...item, availabilityStatus: item.availabilityStatus === "unavailable" ? "available" : "unavailable" as const }
+                  : item
+              ),
+            }
+          : delivery
+      )
+    );
   };
 
   return (
@@ -295,27 +316,39 @@ export default function ShopperDashboard() {
                 const groupedItems = (item as any).groupedItems;
                 const isGroupedPurchased = (item as any).isGroupedPurchased;
                 const isPurchased = groupedItems ? isGroupedPurchased : purchasedItems[itemKey];
+                const isUnavailable = (item as any).availabilityStatus === "unavailable";
+                const deliveryId = (item as any).deliveryId;
+                const customerPhone = (item as any).customerPhone;
+                const orderStatus = (item as any).orderStatus;
+                const isPurchasing = orderStatus === "purchasing";
                 
                 return (
                   <Card
                     key={itemKey}
-                    className={`p-4 cursor-pointer transition-opacity ${isPurchased ? 'opacity-50' : 'opacity-100'}`}
+                    className={`p-4 transition-opacity ${isPurchased ? 'opacity-50' : 'opacity-100'}`}
                     data-testid={`purchase-item-${itemKey}`}
-                    onClick={() => handleTogglePurchased(itemKey, groupedItems)}
                   >
                     <div className="flex items-start gap-3">
                       <Checkbox
                         checked={isPurchased}
                         onCheckedChange={() => handleTogglePurchased(itemKey, groupedItems)}
-                        className="mt-1 pointer-events-none"
+                        className="mt-1"
                         data-testid={`checkbox-purchased-${itemKey}`}
                       />
                       <div className="flex-1">
                         <div className="flex items-start justify-between gap-2">
-                          <div>
-                            <p className={`font-medium ${isPurchased ? 'line-through' : ''}`}>
-                              {item.name}
-                            </p>
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <p className={`font-medium ${isPurchased ? 'line-through' : ''}`}>
+                                {item.name}
+                              </p>
+                              {isUnavailable && (
+                                <Badge variant="destructive" className="text-xs">
+                                  <AlertCircle className="h-3 w-3 mr-1" />
+                                  Unavailable
+                                </Badge>
+                              )}
+                            </div>
                             <p className="text-sm text-muted-foreground">
                               Qty: {item.quantity}
                             </p>
@@ -327,12 +360,48 @@ export default function ShopperDashboard() {
                                 <p className="text-xs text-muted-foreground">
                                   Delivery #{item.deliveryOrder} • {item.customerName}
                                 </p>
+                                {customerPhone && (
+                                  <div className="flex items-center gap-1 mt-1">
+                                    <Phone className="h-3 w-3 text-muted-foreground" />
+                                    <a 
+                                      href={`tel:${customerPhone}`} 
+                                      className="text-xs text-primary hover:underline"
+                                      data-testid={`phone-${itemKey}`}
+                                      onClick={(e) => e.stopPropagation()}
+                                    >
+                                      {customerPhone}
+                                    </a>
+                                  </div>
+                                )}
                               </>
                             )}
                             {purchaseFilter === "items" && groupedItems && (
                               <p className="text-xs text-muted-foreground mt-1">
                                 {groupedItems.length} order{groupedItems.length > 1 ? 's' : ''}: {groupedItems.map((gi: any) => `#${gi.orderNumber}`).join(', ')}
                               </p>
+                            )}
+                            {isPurchasing && purchaseFilter === "order" && (
+                              <div className="mt-2">
+                                <Button
+                                  size="sm"
+                                  variant={isUnavailable ? "default" : "outline"}
+                                  onClick={(e) => handleMarkUnavailable(deliveryId, item.id, e)}
+                                  data-testid={`button-unavailable-${itemKey}`}
+                                  className="h-7 text-xs"
+                                >
+                                  {isUnavailable ? (
+                                    <>
+                                      <CheckCircle2 className="h-3 w-3 mr-1" />
+                                      Mark Available
+                                    </>
+                                  ) : (
+                                    <>
+                                      <AlertCircle className="h-3 w-3 mr-1" />
+                                      Mark Unavailable
+                                    </>
+                                  )}
+                                </Button>
+                              </div>
                             )}
                           </div>
                           <div className="text-right">
@@ -363,16 +432,47 @@ export default function ShopperDashboard() {
                 </Select>
               </div>
               <p className="text-sm text-muted-foreground">Optimized by route</p>
-              {sortedDeliveries.map((delivery, index) => (
-                <div key={delivery.id}>
-                  <p className="text-sm text-muted-foreground mb-2">Stop #{index + 1}</p>
-                  <DeliveryCard
-                    {...delivery}
-                    onStatusChange={(status) => handleStatusChange(delivery.id, status)}
-                    onTakePhoto={handleTakePhoto}
-                  />
-                </div>
-              ))}
+              {sortedDeliveries.map((delivery, index) => {
+                const totalItems = delivery.items.length;
+                const purchasedCount = delivery.items.filter(item => {
+                  const itemKey = `${delivery.id}-${item.id}`;
+                  return purchasedItems[itemKey];
+                }).length;
+                const unavailableItems = delivery.items.filter(item => item.availabilityStatus === "unavailable");
+                const allPurchased = totalItems > 0 && purchasedCount === totalItems;
+                
+                return (
+                  <div key={delivery.id}>
+                    <p className="text-sm text-muted-foreground mb-2">Stop #{index + 1}</p>
+                    <DeliveryCard
+                      {...delivery}
+                      onStatusChange={(status) => handleStatusChange(delivery.id, status)}
+                      onTakePhoto={handleTakePhoto}
+                    />
+                    {delivery.status === "purchasing" && (
+                      <div className="mt-2 flex items-center gap-2 flex-wrap">
+                        {allPurchased && (
+                          <Badge variant="default" className="bg-chart-1" data-testid={`badge-all-purchased-${delivery.id}`}>
+                            <CheckCircle2 className="h-3 w-3 mr-1" />
+                            All Purchased ({totalItems}/{totalItems})
+                          </Badge>
+                        )}
+                        {!allPurchased && purchasedCount > 0 && (
+                          <Badge variant="secondary" data-testid={`badge-purchase-progress-${delivery.id}`}>
+                            Purchased: {purchasedCount}/{totalItems}
+                          </Badge>
+                        )}
+                        {unavailableItems.length > 0 && (
+                          <Badge variant="destructive" data-testid={`badge-unavailable-${delivery.id}`}>
+                            <AlertCircle className="h-3 w-3 mr-1" />
+                            {unavailableItems.length} Unavailable: {unavailableItems.map(i => i.name).join(', ')}
+                          </Badge>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </TabsContent>
         </Tabs>

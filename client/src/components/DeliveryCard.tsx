@@ -9,6 +9,8 @@ interface OrderItem {
   name: string;
   quantity: number;
   price: number;
+  availabilityStatus?: "available" | "unavailable";
+  isPurchased?: boolean;
 }
 
 interface DeliveryCardProps {
@@ -20,7 +22,7 @@ interface DeliveryCardProps {
   itemCount: number;
   items?: OrderItem[];
   scheduledTime: string;
-  status: "pending" | "in_progress" | "delivered";
+  status: "pending" | "purchasing" | "in_progress" | "delivered";
   onStatusChange: (status: string) => void;
   onTakePhoto: () => void;
 }
@@ -55,6 +57,8 @@ export function DeliveryCard({
               ? "bg-chart-1 text-white"
               : status === "in_progress"
               ? "bg-primary text-primary-foreground"
+              : status === "purchasing"
+              ? "bg-chart-2 text-white"
               : "bg-muted text-muted-foreground"
           }
           data-testid={`badge-delivery-status-${id}`}
@@ -63,6 +67,8 @@ export function DeliveryCard({
             ? "Delivered"
             : status === "in_progress"
             ? "In Progress"
+            : status === "purchasing"
+            ? "Purchasing"
             : "Pending"}
         </Badge>
       </div>
@@ -76,7 +82,13 @@ export function DeliveryCard({
         </div>
         <div className="flex items-center gap-2 text-sm">
           <Phone className="h-4 w-4 text-muted-foreground" />
-          <span data-testid={`text-customer-phone-${id}`}>{customerPhone}</span>
+          <a 
+            href={`tel:${customerPhone}`}
+            className="text-primary hover:underline"
+            data-testid={`phone-delivery-${id}`}
+          >
+            {customerPhone}
+          </a>
         </div>
         <div className="flex items-center gap-2 text-sm">
           <Clock className="h-4 w-4 text-muted-foreground" />
