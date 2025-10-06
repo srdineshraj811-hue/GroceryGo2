@@ -7,13 +7,24 @@ import { setupVite, serveStatic, log } from "./vite";
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+const allowList: (string|RegExp)[] = [
+  'http://localhost:5173',            // local dev
+  'https://grocery-go2.vercel.app',   // ← your exact Vercel production domain
+  /\.vercel\.app$/,                   // ← allow preview deployments too
+];
+
 app.use(cors({
-  origin: [
-    'http://localhost:5173',                 // local dev
-    'https://grocery-go2.vercel.app/',         // <-- your Vercel domain (adjust if different)
-  ],
-  credentials: true
+  origin(origin, cb) {
+    if (!origin) return cb(null, true); // allow curl/postman
+    const ok = allowList.some(v =>
+      typeof v === 'string' ? v === origin : v.test(origin)
+    );
+    cb(ok ? null : new Error('Not allowed by CORS'));
+  },
+  credentials: true,
 }));
+
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
