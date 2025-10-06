@@ -1,5 +1,7 @@
 # FreshCart - Grocery Delivery Application
 
+> NOTE: This repository previously included Replit-specific Vite plugins. Those have been removed to give maintainers full control over dev tooling. If you used Replit integrations, check `.replit` (removed) and install `vite-plugin-checker` for local overlays.
+
 ## Overview
 
 FreshCart is a multi-role grocery delivery platform built as a mobile-first web application. The system serves three distinct user roles: customers browsing and ordering groceries, delivery drivers managing their routes and deliveries, and administrators managing the entire platform. The application emphasizes fresh produce delivery with features like real-time order tracking, special offers, promotional banners, and a comprehensive product catalog organized by categories.
