@@ -10,7 +10,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cors({
   origin: [
     'http://localhost:5173',                 // local dev
-    'https://grocerygo2.vercel.app',         // <-- your Vercel domain (adjust if different)
+    'https://grocery-go2.vercel.app/',         // <-- your Vercel domain (adjust if different)
   ],
   credentials: true
 }));
