@@ -1,3 +1,4 @@
+import cors from 'cors';
 import 'dotenv/config';
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
@@ -6,7 +7,13 @@ import { setupVite, serveStatic, log } from "./vite";
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
+app.use(cors({
+  origin: [
+    'http://localhost:5173',                 // local dev
+    'https://grocerygo2.vercel.app',         // <-- your Vercel domain (adjust if different)
+  ],
+  credentials: true
+}));
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
@@ -61,11 +68,12 @@ app.use((req, res, next) => {
   // Other ports are firewalled. Default to 5000 if not specified.
   // this serves both the API and the client.
   // It is the only port that is not firewalled.
-  // ALWAYS serve on env PORT; default 3001 for local dev
-  const PORT = Number(process.env.PORT) || 3001;
-  const HOST = process.env.HOST || '127.0.0.1';
+  // ALWAYS serve on env PORT (Fly uses 8080). Default 3001 for local dev.
+// Bind to 0.0.0.0 in production so Fly can reach it.
+const PORT = Number(process.env.PORT) || 3001;
+const HOST = process.env.NODE_ENV === 'production' ? '0.0.0.0' : (process.env.HOST || '127.0.0.1');
 
-  server.listen(PORT, HOST, () => {
-    log(`Server listening on http://${HOST}:${PORT}`);
-  });
+server.listen(PORT, HOST, () => {
+  log(`Server listening on http://${HOST}:${PORT}`);
+});
 })();
